@@ -23,7 +23,7 @@
 Define_Module(TestWaveApplLayer);
 
 void TestWaveApplLayer::initialize(int stage) {
-    LeachWaveApplLayer::initialize(stage);
+    BaseWaveApplLayer::initialize(stage);
     receivedBeacons = 0;
     receivedData = 0;
 }

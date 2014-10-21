@@ -19,14 +19,10 @@
 //
 
 package org.car2x.veins.modules.application.ieee80211p;
-import org.car2x.veins.base.modules.IBaseApplLayer;
+import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
 
-//
-// Minimal WAVE application example.
-//
-// @author David Eckhoff
-//
-simple TestWaveApplLayer extends LeachWaveApplLayer
+
+simple TestWaveApplLayer extends BaseWaveApplLayer
 {
     parameters:
         @class(TestWaveApplLayer);

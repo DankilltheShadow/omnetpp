@@ -22,7 +22,7 @@
 #define TESTWAVEAPPLLAYER_H_
 
 #include "BaseModule.h"
-#include <LeachWaveApplLayer.h>
+#include <BaseWaveApplLayer.h>
 
 #ifndef DBG
 #define DBG EV
@@ -37,12 +37,12 @@
  *
  * @ingroup applLayer
  */
-class TestWaveApplLayer  : 	public LeachWaveApplLayer {
-	public:
+class TestWaveApplLayer  :  public BaseWaveApplLayer {
+    public:
 
-		virtual ~TestWaveApplLayer();
+        virtual ~TestWaveApplLayer();
 
-		virtual void initialize(int stage);
+        virtual void initialize(int stage);
 
     protected:
         virtual void onBeacon(WaveShortMessage* wsm);
