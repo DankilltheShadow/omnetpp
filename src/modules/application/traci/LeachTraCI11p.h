@@ -18,8 +18,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-#ifndef LEACHTESTWAVEAPPLLAYER_H_
-#define LEACHTESTWAVEAPPLLAYER_H_
+#ifndef LEACHTRACI11P_H_
+#define LEACHTRACI11P_H_
 
 #include "BaseModule.h"
 #include <LeachWaveApplLayer.h>
@@ -37,10 +37,10 @@
  *
  * @ingroup applLayer
  */
-class LeachTestWaveApplLayer  :  public LeachWaveApplLayer {
+class LeachTraCI11p  :  public LeachWaveApplLayer {
     public:
 
-        virtual ~LeachTestWaveApplLayer();
+        virtual ~LeachTraCI11p();
 
         virtual void initialize(int stage);
 
@@ -55,4 +55,4 @@ class LeachTestWaveApplLayer  :  public LeachWaveApplLayer {
 
 };
 
-#endif /* LEACHTESTWAVEAPPLLAYER_H_ */
+#endif /* LEACHTRACI11P_H_ */

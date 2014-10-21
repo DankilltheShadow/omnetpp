@@ -44,7 +44,6 @@ class LeachWaveApplLayer : public BaseApplLayer {
 
        virtual void handlePositionUpdate(cObject* obj);
 
-       virtual bool chElection();
        virtual void newTurn();
 
     protected:
@@ -61,10 +60,11 @@ class LeachWaveApplLayer : public BaseApplLayer {
        int mySCH;
        int myId;
 
-       char state; // CH (Cluster Head Node), ON (Ordinary Node), FN (Free Node)
        int nTurn=0;
-       int nextCHTurn=0;
+       bool nextCHTurn=false;
        double pCH;
+       int P_fraz;
+
 
        cMessage* T_Turn;
        cMessage* CH_Message;

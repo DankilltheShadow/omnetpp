@@ -18,13 +18,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-package org.car2x.veins.modules.application.ieee80211p;
-import org.car2x.veins.modules.application.ieee80211p.BaseWaveApplLayer;
+package org.car2x.veins.modules.application.traci;
+import org.car2x.veins.modules.application.ieee80211p.LeachWaveApplLayer;
 
 
-simple TestWaveApplLayer extends BaseWaveApplLayer
+simple LeachTraCI11p extends LeachWaveApplLayer
 {
     parameters:
-        @class(TestWaveApplLayer);
+        @class(LeachTraCI11p);
+        
         double Prob_CH=default(0.1);
+        string Car_State=default("FN");
 }

@@ -18,39 +18,38 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-#include "TestWaveApplLayer.h"
+#include "LeachTraCI11p.h"
 
-Define_Module(TestWaveApplLayer);
+Define_Module(LeachTraCI11p);
 
-void TestWaveApplLayer::initialize(int stage) {
-    BaseWaveApplLayer::initialize(stage);
-    receivedBeacons = 0;
-    receivedData = 0;
+void LeachTraCI11p::initialize(int stage) {
+    LeachWaveApplLayer::initialize(stage);
+
 }
 
-void TestWaveApplLayer::onBeacon(WaveShortMessage* wsm) {
-    receivedBeacons++;
+void LeachTraCI11p::onBeacon(WaveShortMessage* wsm) {
+
 
     DBG << "Received beacon priority  " << wsm->getPriority() << " at " << simTime() << std::endl;
     int senderId = wsm->getSenderAddress();
 
-    if (sendData) {
-        t_channel channel = dataOnSch ? type_SCH : type_CCH;
-        sendWSM(prepareWSM("data", dataLengthBits, channel, dataPriority, senderId,2));
-    }
+    //if (sendData) {
+    //    t_channel channel = dataOnSch ? type_SCH : type_CCH;
+    //    sendWSM(prepareWSM("data", dataLengthBits, channel, dataPriority, senderId,2));
+    //}
 }
 
-void TestWaveApplLayer::onData(WaveShortMessage* wsm) {
+void LeachTraCI11p::onData(WaveShortMessage* wsm) {
 
     int recipientId = wsm->getRecipientAddress();
 
     if (recipientId == myId) {
         DBG  << "Received data priority  " << wsm->getPriority() << " at " << simTime() << std::endl;
-        receivedData++;
+        //receivedData++;
     }
 }
 
-TestWaveApplLayer::~TestWaveApplLayer() {
+LeachTraCI11p::~LeachTraCI11p() {
 
 }
 

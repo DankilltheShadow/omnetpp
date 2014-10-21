@@ -12,6 +12,8 @@ void LeachWaveApplLayer::initialize(int stage) {
         myId = getParentModule()->getIndex();
 
         pCH=par("Prob_CH").doubleValue();
+        P_fraz=1/pCH;
+
 
         headerLength = par("headerLength").longValue();
         double maxOffset = par("maxOffset").doubleValue();
@@ -37,30 +39,24 @@ void LeachWaveApplLayer::initialize(int stage) {
 
         scheduleAt(simTime() + offSet, T_Turn);
 
-        //primo turno del nodo scelgo se CH
-        if(chElection()){
-            //invia messaggio broadcast IO SONO CH
-            sendWSM(prepareWSM("CH_MESSAGE", beaconLengthBits, type_CCH, beaconPriority, 0, -1));
-        }
+        newTurn();
     }
 }
 
 void LeachWaveApplLayer::newTurn(){
-    nTurn++;
-}
-bool LeachWaveApplLayer::chElection(){
-    if(nextCHTurn == 0){
-        int P_fraz;
-        P_fraz=1/pCH;
-        if(uniform(0,1) < pCH/(1-pCH*(nTurn%P_fraz))){
-            state = 'CH';
-            nextCHTurn=9;
-            return true;
-        }
+    if(nTurn%P_fraz==0){
+        nextCHTurn = false;
     }
-    state = 'FN';
-    nextCHTurn--;
-    return false;
+    if(!nextCHTurn){
+        if(uniform(0,1) <= pCH/(1-pCH*(nTurn%P_fraz))){
+            par("Car_State").setStringValue("CH");
+            nextCHTurn = true;
+            sendWSM(prepareWSM("CH_MESSAGE", beaconLengthBits, type_CCH, beaconPriority, 0, -1));
+        }
+    }else{
+        par("Car_State").setStringValue("FN");
+    }
+    nTurn++;
 }
 
 WaveShortMessage*  LeachWaveApplLayer::prepareWSM(std::string name, int lengthBits, t_channel channel, int priority, int rcvId, int serial) {
@@ -109,15 +105,15 @@ void LeachWaveApplLayer::handleLowerMsg(cMessage* msg) {
     ASSERT(wsm);
 
     if (std::string(wsm->getName()) == "CH_MESSAGE") {
-        if(state=='FN'){
+        if( std::string(par("Car_State").stringValue())=="FN"){
             //divento suo ON e lo informo
-            sendWSM( prepareWSM("ASSOCIATION_REQUEST", beaconLengthBits, type_CCH, beaconPriority, wsm->getSenderAddress(), -1) );
-            state='ON';
+            sendWSM( prepareWSM("ASSOCIATION_REQUEST", dataLengthBits, type_CCH, dataPriority, wsm->getSenderAddress(), 2) );
+            par("Car_State").setStringValue("ON");
             //aggiungo il mittente al mio CH
         }
     }
     if (std::string(wsm->getName()) == "ASSOCIATION_REQUEST") {
-        sendWSM( prepareWSM("ASSOCIATION_RESPONSE", beaconLengthBits, type_CCH, beaconPriority, wsm->getSenderAddress(), -1) );
+        sendWSM( prepareWSM("ASSOCIATION_RESPONSE", dataLengthBits, type_CCH, dataPriority, wsm->getSenderAddress(), 2) );
         //aggiungo il mittente alla liste dei miei ON
     }
 }
@@ -128,9 +124,6 @@ void LeachWaveApplLayer::handleSelfMsg(cMessage* msg) {
             case TIMER_TURN: {
                 scheduleAt(simTime() + par("beaconInterval").doubleValue(), T_Turn);
                 newTurn();
-                if(chElection()){
-                    //invia messaggio broadcast IO SONO CH
-                }
                 break;
             }
             default: {
@@ -142,7 +135,7 @@ void LeachWaveApplLayer::handleSelfMsg(cMessage* msg) {
 }
 
 void LeachWaveApplLayer::sendWSM(WaveShortMessage* wsm) {
-    sendDown(wsm);
+    sendDelayedDown(wsm,individualOffset);
 }
 
 void LeachWaveApplLayer::finish() {
